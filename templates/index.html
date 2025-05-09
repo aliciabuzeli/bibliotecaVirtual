@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Biblioteca</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Biblioteca Virtual</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <a href="/adicionar_livro" class="btn add-btn">Adicionar Livro</a>
+
+        <div class="livros-list">
+            {% if livros %}
+                {% for livro in livros %}
+                    <div class="livro-card">
+                        <h3>{{ livro.titulo }}</h3>
+                        <p><strong>Autor:</strong> {{ livro.autor }}</p>
+                        <p><strong>Ano:</strong> {{ livro.ano }}</p>
+
+                        {% if livro.devolver_ate %}
+                            <p class="status emprestado">Status: Emprestado</p>
+                            <p><strong>Devolver até:</strong> {{ livro.devolver_ate.strftime('%d/%m/%Y') }}</p>
+                            <a href="/devolver_livro/{{ livro.codigo }}" class="btn devolver-btn">Devolver</a>
+                        {% else %}
+                            <p class="status disponivel">Status: Disponível</p>
+                            <a href="/emprestar_livro/{{ livro.codigo }}" class="btn emprestar-btn">Emprestar</a>
+                        {% endif %}
+
+                        <div class="actions">
+                            <a href="/editar_livro/{{ livro.codigo }}" class="btn editar-btn">Editar</a>
+                            <a href="/apagar_livro/{{ livro.codigo }}" class="btn apagar-btn" >Excluir</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-books">Nenhum livro cadastrado ainda.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
